@@ -35,3 +35,9 @@ streamlit==1.61.1
 # Jupyter Notebook
 notebook==7.4.7
 ipykernel==6.30.1
+
+# Mlflow
+mlflow==3.3.2
+
+# dvc
+dvc==3.63.0
