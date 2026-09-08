@@ -1,2 +1,19 @@
 /data
 /outputs/cleaned_data
+.senti_venv/
+
+# mlflow
+mlartifacts/
+mlflow.db
+
+# Hugging Face Training checkpoints
+outputs/nlp_classification/checkpoints-*/
+
+# Python
+__pycache__/
+*.pyc
+
+# outputs
+outputs/cleaned_data/
+outputs/cleaned_split_data
+outputs/embedded_data
