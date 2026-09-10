@@ -22,6 +22,9 @@ config={
         "valid_embeddings":project_root/"outputs/embedded_data/valid.npz",
         "test_embeddings":project_root/"outputs/embedded_data/test.npz",
 
+        # encoder_path
+        "label_encoder": project_root/ "outputs/encoders/label_encoder.pkl"
+
         
 
         
