@@ -10,5 +10,5 @@ mlflow server \
 #### To Run the complete training pipeline from the project root
 
 ```bash
-python -m src.training_pipeline
+python -m src.train_pipeline.py
 ```
