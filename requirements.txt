@@ -41,3 +41,5 @@ mlflow==3.3.2
 
 # dvc
 dvc==3.63.0
+
+bitsandbytes==0.50.2
