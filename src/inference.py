@@ -41,7 +41,7 @@ def predict_sentiment(text, model):
         "text": text,
         "cleaned_text":cleaned_text,
         "sentiment": result["label"],
-        "confidence": str(np.round(100*float(result["score"]),2))+"%"
+        "confidence": float(result["score"])
     }
 
     return prediction
@@ -75,7 +75,7 @@ def main():
     print(f"Text: {prediction["text"]}")
     print(f"Cleaned: {prediction["cleaned_text"]}")
     print(f"Sentiment: {prediction["sentiment"]}")
-    print(f"Confidence: {prediction["confidence"]}")
+    print(f"Confidence: {prediction["confidence"]*100:.2f}")
 
 if __name__=="__main__":
     main()
