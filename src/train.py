@@ -269,8 +269,8 @@ def train_model():
 
         client.set_registered_model_alias(
             name=config["mlflow"]["registered_model_name"],
-            alias="candidate",
-            version=model_info.registered_model_version
+            alias=config["mlflow"]["candidate_alias"],
+            version=str(model_info.registered_model_version)
         )
 
         print("model_uri: ", model_info.model_uri)

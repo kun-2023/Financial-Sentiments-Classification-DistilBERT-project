@@ -57,7 +57,8 @@ config={
     "mlflow": {
         "experiment_name": "financial_sentiments",
         "registered_model_name": "financial_sentiment_distilbert",
-        "model_alias": "champion",
+        "candidate_alias": "candidate",
+        "champion_alias": "champion",
         "run_name": "distilbert",
         "tracking_uri": "http://127.0.0.1:5000",
         "artifact_uri": (project_root/"mlartifacts").as_uri()

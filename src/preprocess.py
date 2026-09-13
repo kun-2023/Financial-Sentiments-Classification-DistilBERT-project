@@ -28,7 +28,7 @@ def clean_text(text):
 
     # Remove stock tocker symbols
     text=re.sub(
-        r"\$[A-Za-z]+\s*[,-|]?\s*",
+        r"\$[A-Za-z]+\s*[-,:|]?\s*",
         "", text
     )
 
@@ -106,12 +106,15 @@ def run_preprocessing():
     cleaned_valid=preprocess_dataframe(raw_valid)
     cleaned_train.dropna(inplace=True)
     cleaned_valid.dropna(inplace=True)
-    #4_create final train/test/valid datasets
+    #4_remove rows whose text become empty after cleaning
+    cleaned_train=cleaned_train[cleaned_train["cleaned_text"].str.strip().ne("")].copy()
+    cleaned_valid=cleaned_valid[cleaned_valid["cleaned_text"].str.strip().ne("")].copy()
+    #5_create final train/test/valid datasets
     split_train, split_valid, split_test=create_splits(cleaned_train, cleaned_valid)
-    #5_Encode labels
+    #6_Encode labels
     (split_train, split_valid, split_test, label_encoder)=encode_labels(
         split_train, split_valid, split_test)
-    #6_save_both_stages
+    #7_save_both_stages
     save_data(
         cleaned_train=cleaned_train,
         cleaned_valid=cleaned_valid,
