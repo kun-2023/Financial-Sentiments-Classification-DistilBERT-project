@@ -21,6 +21,8 @@ from transformers import (
     DataCollatorWithPadding,
     EarlyStoppingCallback
 )
+from mlflow import MlflowClient
+
 from src.config import config
 seed=config["random_state"]["random_state"]
 
@@ -250,7 +252,7 @@ def train_model():
         )
 
         # log model to mlflow
-        mlflow.transformers.log_model(
+        model_info=mlflow.transformers.log_model(
             transformers_model={
                 "model": trainer.model,
                 "tokenizer": tokenizer
@@ -259,6 +261,22 @@ def train_model():
             task="text-classification",
             registered_model_name=config["mlflow"]["registered_model_name"]
         )
+
+        
+
+        # promote the model to candidate
+        client=MlflowClient()
+
+        client.set_registered_model_alias(
+            name=config["mlflow"]["registered_model_name"],
+            alias="candidate",
+            version=model_info.registered_model_version
+        )
+
+        print("model_uri: ", model_info.model_uri)
+        print("Run_id: ", model_info.run_id)
+        print("Registered_model_version: ",model_info.registered_model_version)
+
     #save metrics
     metrics = {
         "accuracy": test_metrics["test_accuracy"],

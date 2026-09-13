@@ -14,6 +14,12 @@ __pycache__/
 *.pyc
 
 # outputs
-outputs/cleaned_data/
-outputs/cleaned_split_data
-outputs/embedded_data
+outputs/
+
+# MLflow local storage
+mlartifacts/
+mlflow.db
+
+# Hugging Face checkpoints
+checkpoint-*
+**/checkpoint-*
