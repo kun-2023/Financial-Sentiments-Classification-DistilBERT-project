@@ -1,0 +1,63 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python -m src.preprocess
+    deps:
+    - path: data/sent_train.csv
+      hash: md5
+      md5: 0a7c8e3f2248062265faf9291f29c5e7
+      size: 858645
+    - path: data/sent_valid.csv
+      hash: md5
+      md5: 719a13decc8e68f28d8727c509f2a20d
+      size: 217378
+    - path: src/config.py
+      hash: md5
+      md5: 286c343386d88e01ab8bff3fbc6e553c
+      size: 2491
+    - path: src/preprocess.py
+      hash: md5
+      md5: 0d7816dd220e25e93fe24f55c6f03e24
+      size: 4421
+    outs:
+    - path: outputs/cleaned_data
+      hash: md5
+      md5: ac31c10bc6d9bd5887df166326f5d660.dir
+      size: 992880
+      nfiles: 2
+    - path: outputs/cleaned_split_data
+      hash: md5
+      md5: ae6b9fdacc69a2329f7b6d66154d2dfd.dir
+      size: 917219
+      nfiles: 3
+  train:
+    cmd: python -m src.train_pipeline
+    deps:
+    - path: outputs/cleaned_split_data
+      hash: md5
+      md5: ae6b9fdacc69a2329f7b6d66154d2dfd.dir
+      size: 917219
+      nfiles: 3
+    - path: src/config.py
+      hash: md5
+      md5: 286c343386d88e01ab8bff3fbc6e553c
+      size: 2491
+    - path: src/train.py
+      hash: md5
+      md5: f869a230d0478356ef81ddd19cd74ae5
+      size: 8462
+    - path: src/train_pipeline.py
+      hash: md5
+      md5: 3194aa89fef15c8dd7e2a2e75384a20e
+      size: 329
+    outs:
+    - path: outputs/encoders
+      hash: md5
+      md5: 95263d083d053c2648172b8d7bde81be.dir
+      size: 505
+      nfiles: 1
+    - path: outputs/nlp_classification_model/model
+      hash: md5
+      md5: 154ba89056d3a61d47180bbeee55de66.dir
+      size: 268786312
+      nfiles: 7
