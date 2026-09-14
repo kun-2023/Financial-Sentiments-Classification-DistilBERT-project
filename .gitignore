@@ -1,10 +1,15 @@
-/data
-/outputs/cleaned_data
+/data/
+/outputs/cleaned_data/
+/outputs/cleaned_split_data/
 .senti_venv/
 
 # mlflow
 mlartifacts/
 mlflow.db
+
+# model artifacts
+/outputs/nlp_classification/model/
+/outputs/encoders/
 
 # Hugging Face Training checkpoints
 outputs/nlp_classification/checkpoints-*/
@@ -23,3 +28,6 @@ mlflow.db
 # Hugging Face checkpoints
 checkpoint-*
 **/checkpoint-*
+
+# enviroments
+.senti_venv
