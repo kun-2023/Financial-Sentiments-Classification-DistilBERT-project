@@ -4,8 +4,8 @@ stages:
     deps:
       - src/preprocess.py
       - src/config.py
-      - data/senti_train.csv
-      - data/senti_valid.csv
+      - data/sent_train.csv
+      - data/sent_valid.csv
     outs:
       - outputs/cleaned_data
       - outputs/cleaned_split_data
