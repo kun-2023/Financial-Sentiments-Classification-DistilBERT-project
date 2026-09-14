@@ -19,4 +19,4 @@ stages:
       - outputs/cleaned_split_data
     outs:
       - outputs/encoders
-      - outputs/nlp_classification_model
+      - outputs/nlp_classification_model/model
