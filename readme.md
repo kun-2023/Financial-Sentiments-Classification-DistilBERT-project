@@ -22,3 +22,11 @@ python -m src.inference 'Adobe shares fell after earnings' --alias candidate
 
 python -m src.promote
 python -m src.inference 'Adobe shares fell after earnings' --alias champion
+
+#### Reproduce model with DVC
+```bash
+dvc repro
+# after model is being trained and registed as candidate. promote it to champion
+python -m promote.py
+```
+
