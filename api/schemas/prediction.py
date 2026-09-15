@@ -14,11 +14,9 @@ class PredictionResponse(BaseModel):
         description="Predicted financial sentiment."
     )
 
-    confidence: float=Field(
+    confidence: str=Field(
         ...,
-        ge=0.0,
-        le=1.0,
-        description="Model confidence score."
+        description="Model confidence score as a percentage."
     )    
 
     explanation: str=Field(

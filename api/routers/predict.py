@@ -26,7 +26,7 @@ def predict(request: PredictionRequest) -> PredictionResponse:
 
         return PredictionResponse(
             sentiment=sentiment,
-            confidence=confidence,
+            confidence=f"{confidence:.2%}",
             explanation=explanation,
         )
     except ValueError as e:

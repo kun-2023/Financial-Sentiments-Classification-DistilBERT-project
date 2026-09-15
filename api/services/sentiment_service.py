@@ -37,15 +37,11 @@ class SentimentService:
     def predict(self, text: str) -> tuple[str, float]:
         if not text or not text.strip():
             raise ValueError("Texts cann't be empty.")
+        
         result=self.pipeline(text.strip())
         prediction=result[0]
-        label=prediction["label"]
+        sentiment=str(prediction["label"])
         confidence=float(prediction["score"])
-
-        label_id=int(label.replace("LABEL_", ""))
-        sentiment=self.label_encoder.inverse_transform(
-            [label_id]
-        )[0]
 
         return str(sentiment), confidence
 
