@@ -11,9 +11,9 @@ router=APIRouter(
 
 @router.post(
     "",
-    respoonse_model=PredictionResponse,
-
+    response_model=PredictionResponse,
 )
+
 def predict(request: PredictionRequest) -> PredictionResponse:
     try:
         sentiment, confidence=predict_sentiment(request.text)
