@@ -63,3 +63,8 @@ uvicorn api.main:app --reload
 # streamlit http://localhost:8501
 streamlit run frontend/app.py
 ```
+
+#### To Build Docker Image
+```bash
+docker compose up --build
+```

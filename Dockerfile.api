@@ -11,11 +11,11 @@ ENV PYTHONUNBUFFERED=1
 # INSTALL DEPENDENCIES
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirments.txt
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # copy application code
 COPY api ./api
-COPY api ./src
+COPY src ./src
 # copy label_encoder.pkl
 
 COPY outputs ./outputs
