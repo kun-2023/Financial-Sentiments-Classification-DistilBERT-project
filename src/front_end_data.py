@@ -6,6 +6,7 @@ from sklearn.metrics import confusion_matrix
 from src.config import config
 from src.inference import load_model, predict_sentiment
 from src.llm_explainer import load_llm, explain_sentiment
+from pathlib import Path
 
 demo_sentences=[
     "Adobe said artificial intelligence remains a key growth area, with AI-first ending annual recurring revenue exceeding $650 million and increasing more than 150% from a year earlier. The company also agreed to acquire Topaz Labs, subject to regulatory clearance.",
@@ -54,6 +55,10 @@ def confusion_matrix_normalized(model):
     cm=confusion_matrix(y_true, y_pred, labels=labels, normalize="true")
 
     cm_df=pd.DataFrame(cm, index=labels, columns=labels)
+    cm_df_output_dir=Path(config["path"]["cm"])
+    cm_df.to_csv(
+            cm_df_output_dir, index=True
+        )
     return cm_df
 
 # Generate demo predictions
@@ -99,6 +104,12 @@ def prepare_frontend_data():
         sentiment_model=sentiment_model,
         llm_model=llm_model,
         llm_tokenizer=llm_tokenizer
+    )
+    # save demo_df to nlp_classification_model folder
+    demo_df_output_dir=Path(config["path"]["demo_data"])
+
+    demo_df.to_csv(
+        demo_df_output_dir, index=False
     )
 
     return {

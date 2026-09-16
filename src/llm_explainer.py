@@ -1,4 +1,5 @@
 import torch
+import re
 from transformers import (AutoTokenizer, AutoModelForCausalLM)
 from src.config import config
 
@@ -51,7 +52,7 @@ def explain_sentiment(
                 f"Financial text:\n{text}\n\n"
                 f"predicted sentiment: {sentiment}\n"
                 f"Confidence: {confidence_pct:.1f}%\n\n"
-                "Explain this sentiment prediction in one or two sentences."
+                "Explain the sentiment in one complete sentence of no more than 40 words and end with a period."
             )
         }
     ]
@@ -74,8 +75,18 @@ def explain_sentiment(
         )
     # keep only newly generated tokens, not the original prompt.
     generated_ids=output_ids[0, inputs["input_ids"].shape[-1]:]
-    explanation=tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
-    if "." in explanation:
-        return explanation.rsplit(".",1)[0]+"."
-    return explanation
+    explanation=tokenizer.decode(
+        generated_ids, 
+        skip_special_tokens=True).strip()
 
+    match=re.search(
+        r"\.(?=\s+[A-Z]|$)", explanation
+    )
+
+    if match:
+        return explanation[:match.end()].strip()
+
+    return (
+        f"The predicted sentiment is {sentiment} based on the "
+        "information in the provided financial text."
+    )

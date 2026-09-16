@@ -32,7 +32,11 @@ config={
         "distilbert_model_artifacts": project_root/"outputs/nlp_classification_model/model",
 
         # test metrics
-        "test_metrics": project_root/"outputs/nlp_classification_model/test_metrics.json"
+        "test_metrics": project_root/"outputs/nlp_classification_model/test_metrics.json",
+        # demo_data
+        "demo_data": project_root/"outputs/nlp_classification_model/demo_df.csv",
+        # cm
+        "cm": project_root/"outputs/nlp_classification_model/cm.csv"
         },
 
     "random_state": {
@@ -66,7 +70,7 @@ config={
 
     "llm": {
         "model_id": "HuggingFaceTB/SmolLM2-360M-Instruct",
-        "max_new_tokens": 30,
+        "max_new_tokens": 150,
         "do_sample": False,
     },
 }

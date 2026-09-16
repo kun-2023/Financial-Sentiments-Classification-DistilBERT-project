@@ -2,7 +2,7 @@ from functools import lru_cache
 import torch 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from api.settings import llm_model_name
-
+import re
 
 
 class ExplanationService:
@@ -40,7 +40,8 @@ class ExplanationService:
             "role": "system",
             "content": ("""
             You explain financial sentiment predictions clearly and concisely.
-            Explain why the predicted sentiment is positive, negative, or neutral. 
+            Explain why the predicted sentiment is positive, negative, or 
+            neutral in one sentence and end with a period. 
             You will only do so strictly with the information provided by 
             texts and sentiment. Don't invent."""
             )
@@ -53,7 +54,7 @@ class ExplanationService:
                 f"Financial text: \n{text.strip()}\n\n"
                 f"Predicted sentiment: {sentiment}\n"
                 f"Confidence: {confidence:.2%}\n\n"
-                "Explain the predicted sentiment in 2-3 sentences"
+                "Explain the predicted sentiment in one complete sentence and end with a period."
             )
         }
         ]
@@ -69,7 +70,7 @@ class ExplanationService:
         with torch.inference_mode():
             outputs=self.model.generate(
                 inputs,
-                max_new_tokens=30,
+                max_new_tokens=150,
                 do_sample=False,
             )
 
@@ -78,11 +79,14 @@ class ExplanationService:
         explanation=self.tokenizer.decode(
             generated_tokens,
             skip_special_tokens=True
+        ).strip()
+        match=re.search(r"\.(?=\s+[A-Z]|$)",explanation)
+        if match:
+            return explanation[:match.end()].strip()
+        return (
+            f"The predicted sentiment is {sentiment} based on the "
+    "information and language in the provided financial text."
         )
-
-        if "." in explanation:
-            return explanation.rsplit(".",1)[0]+"."
-        return explanation.strip()
 
 @lru_cache(maxsize=1)
 def get_explanation_service() -> ExplanationService:

@@ -35,7 +35,8 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             detail=str(e),
         )
     except Exception as e:
+        print("PREDICTION ERROR:", repr(e))
         raise HTTPException(
             status_code=500,
-            detail="prediction failed.",
+            detail=str(e),
         ) from e

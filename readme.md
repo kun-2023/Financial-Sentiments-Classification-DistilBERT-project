@@ -47,3 +47,19 @@ uvicorn api.main:app --reload
 ```
 http://127.0.0.1:8000/docs
 ```
+
+#### Run frontend by turning on mlflow ui, fastapi swagger, and streamlit 
+```bash
+# mlflow http://127.0.01:5000
+mlflow server \
+  --backend-store-uri sqlite:///mlflow.db \
+  --artifacts-destination ./mlartifacts \
+  --host 127.0.0.1 \
+  --port 5000
+
+# fastapi http://127.0.01:8000
+uvicorn api.main:app --reload
+
+# streamlit http://localhost:8501
+streamlit run frontend/app.py
+```
