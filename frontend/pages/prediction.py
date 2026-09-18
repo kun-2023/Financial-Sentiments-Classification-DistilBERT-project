@@ -26,78 +26,91 @@ def show_prediction():
     if st.button("Put the Example into the Input Box"):
         st.session_state["financial_text"]=Demo_text
 
-    text=st.text_area(
-        "Financial comments",
-        placeholder="Enter financial text here...",
-        height=180,
-        key="financial_text"
-    )    
 
-    if st.button("Predict Sentiment", type="primary"):
+    with st.form("prediction_form"):
+        text=st.text_area(
+           "Financial comments",
+            placeholder="Enter financial text here...",
+            height=180,
+            key="financial_text"
+        )    
+
+        predict_button=st.form_submit_button(
+            "predict Sentiment",
+            type="primary"
+        )
+
+    if predict_button:
+        
+        st.session_state.pop("prediction_result", None)
+
         if not text.strip():
             st.warning("Please enter a financial comment.")
-            return 
+            return
         try:
-            with st.spinner("Predicting"):
+            with st.spinner("Predicting..."):
                 response=requests.post(
-                    api_url,
-                    json={
-                        "text": text
-                    },
-                    timeout=60,
+                    api_url, json={"text":text}, timeout=60
                 )
 
             if not response.ok:
                 try:
                     error=response.json()
-                    detail=error.get("detail", "Prediction failed.")
+                    detail=error.get(
+                        "detail",
+                        "Prediction failed."
+                    )
                 except ValueError:
                     detail="Prediction failed."
+
                 st.error(f"API error: {detail}")
                 return
 
-            result=response.json()
-
-            result_df=pd.DataFrame([
-                {
-                    "Sentiment": result["sentiment"].capitalize(),
-                    "Confidence": result["confidence"],
-                    "Explanation": result["explanation"]
-                }
-            ])
-
-            st.dataframe(
-                result_df,
-                use_container_width=True,
-                hide_index=True,
-                row_height=120,
-                column_config={
-                    "Sentiment": st.column_config.TextColumn(
-            "Sentiment",
-            width="small"
-        ),
-        "Confidence": st.column_config.TextColumn(
-            "Confidence",
-            width="small"
-        ),
-        "Explanation": st.column_config.TextColumn(
-            "Explanation",
-            width="large"
-        ),
-                }
-            )
+            
+            st.session_state["prediction_result"]=response.json()
 
         except requests.exceptions.ConnectionError:
-            st.error(
-                "Couldn't connect to FastAPI server."
-            )
+            st.error("Couldn't connect to FastAPI server.")
 
         except requests.exceptions.Timeout:
             st.error(
-                "The prediction took too long. Try again with a shorter comment."
+                "The prediction took long. Try again with a shorter comment."
             )
 
         except requests.exceptions.RequestException as e:
             st.error(
                 f"Request failed: {e}"
             )
+    if "prediction_result" in st.session_state:
+
+        result=st.session_state["prediction_result"]
+
+        result_df=pd.DataFrame([
+            {
+                "Sentiment": result["sentiment"].capitalize(),
+                "Confidence": result["confidence"],
+                "Explanation": result["explanation"]
+            }
+        ])
+
+            
+        st.dataframe(
+            result_df,
+            use_container_width=True,
+            hide_index=True,
+            row_height=120,
+            column_config={
+    "Sentiment": st.column_config.TextColumn(
+        "Sentiment",
+        width="small"
+    ),
+    "Confidence": st.column_config.TextColumn(
+        "Confidence",
+        width="small"
+    ),
+    "Explanation": st.column_config.TextColumn(
+        "Explanation",
+        width="large"
+    ),
+}
+)

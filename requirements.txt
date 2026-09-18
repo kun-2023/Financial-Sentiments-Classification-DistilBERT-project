@@ -43,3 +43,8 @@ mlflow==3.3.2
 dvc==3.67.1
 
 bitsandbytes==0.50.2
+
+# test
+pytest==8.4.2
+httpx==0.28.1
+httpx2==2.13.0

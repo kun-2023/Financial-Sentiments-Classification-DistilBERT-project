@@ -10,11 +10,25 @@ services:
       - .env
     environment:
       mlflow_tracking_uri: http://host.docker.internal:5000
+    
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+
 
   streamlit:
     build:
       context: .
       dockerfile: Dockerfile.streamlit
+    env_file:
+      - .env
+    environment:
+      api_url: http://api:8000/predict
     container_name: financial_sentiment_streamlit
     ports:
       - "8501:8501"      
