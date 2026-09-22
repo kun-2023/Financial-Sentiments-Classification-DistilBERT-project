@@ -1,8 +1,9 @@
 import requests
 import streamlit as st
 import pandas as pd
+import os
 
-api_url="http://api:8000/predict"
+api_url=os.environ["api_url"]
 Demo_text="""
     California State Teachers Retirement System reduced its 
     Crocs stake by 2.9%, selling 1,722 shares and retaining 
