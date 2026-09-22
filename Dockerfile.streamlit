@@ -6,13 +6,17 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 ENV PYTHONUNBUFFERED=1
 
-COPY requirements.txt .
+COPY requirements_streamlit.txt .
 
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements_streamlit.txt
 
 COPY frontend ./frontend
 
-COPY outputs ./outputs
+COPY outputs/nlp_classification_model/test_metrics.json ./outputs/nlp_classification_model/test_metrics.json
+
+COPY outputs/nlp_classification_model/demo_df.csv ./outputs/nlp_classification_model/demo_df.csv
+     
+COPY outputs/nlp_classification_model/cm.csv ./outputs/nlp_classification_model/cm.csv     
 
 EXPOSE 8501
 

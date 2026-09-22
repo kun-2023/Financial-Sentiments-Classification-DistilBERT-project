@@ -9,9 +9,15 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # INSTALL DEPENDENCIES
-COPY requirements.txt .
+COPY requirements_api.txt .
 
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir torch==2.5.1 \
+      --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements_api.txt
+
+
 
 # copy application code
 COPY api ./api
