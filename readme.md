@@ -131,7 +131,42 @@ docker compose down
 ```bash
 Ctrl+C
 ```
-#### torun pytest
+#### to run pytest
 ```bash
 pytest -v
+```
+
+
+#### AWS Deployment
+1. build Docker images
+```bash
+docker compose build
+```
+2. Authenticate Docker with Amazon ECR. Login Success
+```bash
+aws ecr get-login-password \
+  --region ca-central-1 \
+  | docker login \
+  --username AWS \
+  --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com
+```
+
+3. Tag the images
+```bash
+docker tag financial_sentiments-api:latest \
+  <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
+
+docker tag financial_sentiments-streamlit:latest \
+  <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-streamlit:latest
+```
+
+4. Push images to ECR
+```bash
+docker push <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
+
+docker push <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
+```
+
+5. Deploy with ECS
+```ECR images wull be used by ECS
 ```
