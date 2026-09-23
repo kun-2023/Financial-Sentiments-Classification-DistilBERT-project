@@ -83,6 +83,7 @@ jobs:
           aws ecs update-service \
             --cluster financial-sentiments-cluster \
             --service financial-sentiments-task-service-thbxvzfx \
+            --desired-count 1 \
             --force-new-deployment \
             --region ca-central-1
 
