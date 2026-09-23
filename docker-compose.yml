@@ -1,5 +1,6 @@
 services:
   api:
+    image: financial_sentiment_api:latest
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -11,6 +12,7 @@ services:
     
     
   streamlit:
+    image: financial_sentiment_streamlit:latest
     build:
       context: .
       dockerfile: Dockerfile.streamlit

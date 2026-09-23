@@ -66,8 +66,8 @@ jobs:
       - name: Tag Docker images
         if: github.event_name=='push'
         run: |
-          docker tag financial_sentiments-api:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest
-          docker tag financial_sentiments-streamlit:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest
+          docker tag financial_sentiment_api:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest
+          docker tag financial_sentiment_streamlit:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest
 
       - name: Push Docker images to ECR
         if: github.event_name=='push'
