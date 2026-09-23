@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      #- 10_CI_CD_Pipeline
+      - 10_CI_CD_Pipeline
 
   pull_request:
     branches:
@@ -30,6 +30,20 @@ jobs:
         run: |
           pip install -r requirements_api.txt
           pip install pytest requests httpx
+
+      - name: Install DVC
+        run: pip install "dvc[s3]"
+
+      # AWS authentivation before dvc pull
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}   
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ca-central-1
+
+      - name: Pull DVC artifacts
+        run: dvc pull
 
       - name: Check Python syntax
         run: |
