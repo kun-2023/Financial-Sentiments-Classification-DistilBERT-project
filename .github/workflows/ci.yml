@@ -53,3 +53,27 @@ jobs:
       - name: Run health test
         run: |
           python -m pytest tests/test_health.py -v
+
+      - name: Login to Amazon ECR
+        if: github.event_name== 'push'
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker images
+        if: github.event_name== 'push'
+        run: docker compose build
+
+      - name: Tag Docker images
+        if: github.event_name=='push'
+        run: |
+          docker tag financial_sentiments-api:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest
+          docker tag financial_sentiments-streamlit:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest
+
+      - name: Push Docker images to ECR
+        if: github.event_name=='push'
+        run: |
+          docker push ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest       
+          docker push ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest       
+
+
+                
