@@ -2,6 +2,12 @@
 /outputs/cleaned_data/
 /outputs/cleaned_split_data/
 .senti_venv/
+/outputs/*
+!/outputs/nlp_classification_model/
+/outputs/nlp_classification_model/*
+!/outputs/nlp_classification_model/test_metrics.json
+!/outputs/nlp_classification_model/demo_df.csv
+!/outputs/nlp_classification_model/cm.csv
 
 # mlflow
 mlartifacts/
@@ -18,8 +24,7 @@ outputs/nlp_classification/checkpoints-*/
 __pycache__/
 *.pyc
 
-# outputs
-outputs/
+
 
 # MLflow local storage
 mlartifacts/

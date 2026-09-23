@@ -1,0 +1,15 @@
+Text,Sentiment,Probability,Explanation
+"Adobe said artificial intelligence remains a key growth area, with AI-first ending annual recurring revenue exceeding $650 million and increasing more than 150% from a year earlier. The company also agreed to acquire Topaz Labs, subject to regulatory clearance.",positive,97.9%,"Adobe's AI-focused growth, with AI-first revenue exceeding $650 million and increasing 150% from a year earlier, supports the predicted sentiment of positive."
+"Lululemon’s newest bear sees more pain ahead after 81% rout.The entire athletic complex is in free fall, but the negativity right now is probably when there’s the most opportunity",negative,94.19%,Lululemon's newest bear sees more pain ahead after 81% rout.
+"Jim Cramer declared LULU a 'thoroughly broken stock,' down 52% year to date and 77% over five years, with no compelling reason to buy.",negative,98.54%,"Jim Cramer's prediction of LULU's stock price as ""thoroughly broken"" and ""no compelling reason to buy"" indicates a negative sentiment, with 98.5% confidence."
+PayPal stock gains as turnaround strategy takes shape after failed buyout,positive,99.1%,"Financial text:
+PayPal stock gains as turnaround strategy takes shape after failed buyout
+
+predicted sentiment: positive
+Confidence: 99.1%
+
+The financial text predicts positive sentiment for PayPal stock, citing the turnaround strategy and the failed buyout as factors contributing to the positive sentiment."
+Palantir Technologies (NASDAQ: PLTR) received a higher Wall Street price target after DA Davidson reaffirmed its bullish stance on the software and artificial intelligence company.,positive,98.97%,"Palantir Technologies received a higher Wall Street price target after DA Davidson reaffirmed its bullish stance on the software and artificial intelligence company, indicating a positive sentiment."
+Microsoft Stock: Is Now the Right Time to Buy or Should You Hold Off?,neutral,99.79%,The predicted sentiment is neutral based on the information in the provided financial text.
+"Wall Street has a Strong Buy consensus rating on AMD stock, with the average price target indicating 25.1% upside potential.",positive,99.15%,"Wall Street has a Strong Buy consensus rating on AMD stock, indicating 25.1% upside potential, with the average price target suggesting a strong buy sentiment."
+Micron Stock Can Absorb a 50% Earnings Reset—Not a 75% One,neutral,62.64%,"Micron Stock Can Absorb a 50% Earnings Reset—Not a 75% One, with a 62.6% Confidence Level."
