@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # CI
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -34,12 +35,11 @@ jobs:
       - name: Install DVC
         run: pip install "dvc[s3]"
 
-      # AWS authentivation before dvc pull
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}   
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ca-central-1
 
       - name: Pull DVC artifacts
@@ -51,29 +51,45 @@ jobs:
           python -m compileall frontend
 
       - name: Run health test
-        run: |
-          python -m pytest tests/test_health.py -v
+        run: python -m pytest tests/test_health.py -v
 
+      # CD
       - name: Login to Amazon ECR
-        if: github.event_name== 'push'
+        if: github.event_name == 'push'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker images
-        if: github.event_name== 'push'
+        if: github.event_name == 'push'
         run: docker compose build
 
       - name: Tag Docker images
-        if: github.event_name=='push'
+        if: github.event_name == 'push'
         run: |
-          docker tag financial_sentiment_api:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest
-          docker tag financial_sentiment_streamlit:latest ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest
+          docker tag financial_sentiment_api:latest ${{ steps.login-ecr.outputs.registry }}/financial-sentiment-api:latest
+          docker tag financial_sentiment_streamlit:latest ${{ steps.login-ecr.outputs.registry }}/financial-sentiment-streamlit:latest
 
       - name: Push Docker images to ECR
-        if: github.event_name=='push'
+        if: github.event_name == 'push'
         run: |
-          docker push ${{steps.login-ecr.outputs.registry}}/financial-sentiment-api:latest       
-          docker push ${{steps.login-ecr.outputs.registry}}/financial-sentiment-streamlit:latest       
+          docker push ${{ steps.login-ecr.outputs.registry }}/financial-sentiment-api:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/financial-sentiment-streamlit:latest
 
+      # ECS deployment
 
-                
+      - name: Deploy to ECS
+        if: github.event_name=='push'        
+        run: |
+          aws ecs update-service \
+            --cluster financial-sentiments-cluster \
+            --service financial-sentiments-task-service-thbxvzfx \
+            --force-new-deployment \
+            --region ca-central-1
+
+      - name: Wait for ECS deployment
+        if: github.event_name== 'push'
+        run: |
+          aws ecs wait services-stable \
+            --cluster financial-sentiments-cluster \
+            --services financial-sentiments-task-service-thbxvzfx \
+            --region ca-central-1
