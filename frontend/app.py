@@ -12,6 +12,14 @@ st.set_page_config(
     layout="wide"
 )
 
+# Add GitHub button
+st.sidebar.link_button(
+    "Go to GitHub Repository",
+    "https://github.com/kun-2023/Financial-Sentiments-Classification-DistilBERT-project",
+    type="primary"
+
+)
+
 st.markdown(
     """
     <style>

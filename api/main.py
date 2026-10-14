@@ -25,5 +25,9 @@ app=FastAPI(
     lifespan=lifespan
 )
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 app.include_router(health_router)
 app.include_router(predict_router)

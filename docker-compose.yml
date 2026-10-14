@@ -9,6 +9,9 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      llm_model_name: /app/models/smollm2
+      mlflow_tracking_uri: http://host.docker.internal:5000
     
     
   streamlit:

@@ -1,172 +1,69 @@
-#### To Open Mlflow Server
-in bash type:
-```bash
-mlflow server \
-  --backend-store-uri sqlite:///mlflow.db \
-  --artifacts-destination ./mlartifacts \
-  --host 127.0.0.1 \
-  --port 5000
-```  
+## End-to-End Financial Texts Sentiment Classification
+### Project Overview
+* App in a glance: This app is to classify the sentiment of a financial twitts or comments from analysts as positive, negative, or neutral. The app deploys a **fine-tuned DistilBert** model for sentiment classification and a **small language model** to explain the reason behind the sentiment.
+* Model: 1. A finetuned pre-trained transformer **DistilBert**. It offers high accuracies and reduces training times. 2. A small language model: SmoLM2 for explaining the predictions.
+* Techstacks: **Python**, **Pytorch**, **DistilBert**, **MLflow**, **DVC**, **AWS ECR**, **AWS ECS**, **Docker**, **FastAPI**, **Streamlit**, **CI/CD pipeline**, **DVC Retraining pipeline**
+* Highlights: The app was integrated with 2 pipelines. One is **DVC retraining pipeline**, which would retrain the model generating model artifacts, metrics dataframes by simply commiting `dvc repro` in bash; the other is **CI/CD pipeline**, which allows the continous integration(install depedencies, run tests) of new codes and continous deployment(log in AWS, build, tag and push docker images, deploy the app) of the app with a line of code `git push`. It saves time and reduce mistakes.
+* Be aware: The model needs compatiable GPU for training. It also relies on MLflow.
 
-#### To Run the complete training pipeline from the project root while have mlflow ui open
+### Testing Metrics
+|Metrics|Scores|
+|-------|------|
+|Accuracy|86.34%|
+|Precision|81.83%|
+|Recall|82.29%|
+|F1|82.21%|
 
+### Run App locally with docker
 ```bash
-python -m src.train_pipeline
-```
 
-#### To run inference
-```bash
-python -m src.inference 'Adobe shares fell after earnings' --alias candidate
-```
-#### To promote the model to champion from candidate then run the champion version
+# 1 clone the repo to that folder
+git clone https://github.com/kun-2023/Financial-Sentiments-Classification-DistilBERT-project financial_sentiments
 
-python -m src.promote
-python -m src.inference 'Adobe shares fell after earnings' --alias champion
+# 2 navigate to project directory
+cd financial_sentiments
 
-#### Reproduce model with DVC
-```bash
-dvc repro
-# after model is being trained and registed as candidate. promote it to champion
-python -m promote.py
-```
 
-#### To show FastAPI Swagger
-```bash
-# turn on mlflow ui
-mlflow server \
-  --backend-store-uri sqlite:///mlflow.db \
-  --artifacts-destination ./mlartifacts \
-  --host 127.0.0.1 \
-  --port 5000
-```
-# turn on fastapi swagger
-```bash
-uvicorn api.main:app --reload
-```
-# then go to docs by adding /docs to http://127.0.0.1:8000
-```
-http://127.0.0.1:8000/docs
-```
-
-#### Run frontend by turning on mlflow ui, fastapi swagger, and streamlit 
-```bash
-# mlflow http://127.0.01:5000
+# 3 create and activate virtual environment
+python -m venv .senti_venv
+source .senti_venv/Scripts/activate
+# 4 install dependencies
+pip install -r requirements.txt
+# 4.1 clone .env file
+cp .env.example .env
+# 5 download data and model from AWS s3
+dvc pull
+# 6 Start MLflow in a seperate terminal
 mlflow server \
   --backend-store-uri sqlite:///mlflow.db \
   --artifacts-destination ./mlartifacts \
   --host 0.0.0.0 \
-  --port 5000
+  --port 5000 \
   --workers 1
-```
-##### then manually open http://localhost:5000
-
-```bash
-# fastapi http://127.0.01:8000
-uvicorn api.main:app --reload
-# then add /docs at the end
-# streamlit http://localhost:8501
-streamlit run frontend/app.py
-```
-
-#### To Build Docker Image
-```bash
-docker compose up --build
-```
-
-#### Running the app locally
-##### The application uses the following:
-* MLflow for model registry and artifact storage
-* FastAPI for the prediction API
-* Streamlit for the frontend
-* Docker Compose to run the FastAPI and Streamlit services
-
-#### Steps
-1. Activate the virtual environment
-```bash
-source .senti_venv/Scripts/activate
-```
-2. Start MLflow server
-```bash
-mlflow server --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
-```
-2.1 then manually type http://localhost:5000
-
-3. start the application with Docker Compose in a second terminal
-```bash
-docker compose up -d
-```
-3.1 if the image needs to be rebuilt
-```bash
+# 6 build docker images
 docker compose up --build -d
-```
-4. Check the container
-```bash
-docker compose ps
-```
-5. wait for the model to load then ctrl+c to get out
-```bash
-docker compose logs -f api
-```
-5.1 wait to see(this may take a while):
-```
-Models ready
-Application startup complete
-Uvicorn running on http://0.0.0.0:8000
-```
-
-6. check API health and expect {"status":"ok"} before running the app
-```bash
-curl http://localhost:8000/health
-```
-7. Open the Streamlit application
-```bash
-start http://localhost:8501
-```
-8. shut down application
-8.1 shut down docker
-```bash
+# 7 type http://localhost:8501 in chrome browser or any browser of your choice
+# Afterwards, remove docker containers and networks
 docker compose down
 ```
-8.2 stop MLflow
+
+
+### How to retrain a model automatically
+
 ```bash
-Ctrl+C
-```
-#### to run pytest
-```bash
-pytest -v
-```
+# 1 Turn on mlflow server
+mlflow server \
+  --backend-store-uri sqlite:///mlflow.db \
+  --artifacts-destination ./mlartifacts \
+  --host 127.0.0.1 \
+  --port 5000 \
+  --workers 1
 
+# 2 Retrain with DVC
+dvc repro
 
-#### AWS Deployment
-1. build Docker images
-```bash
-docker compose build
-```
-2. Authenticate Docker with Amazon ECR. Login Success
-```bash
-aws ecr get-login-password \
-  --region ca-central-1 \
-  | docker login \
-  --username AWS \
-  --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com
-```
+# 3 then promote it to champion manually
+python -m src.promote
+```  
 
-3. Tag the images
-```bash
-docker tag financial_sentiments-api:latest \
-  <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
-
-docker tag financial_sentiments-streamlit:latest \
-  <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-streamlit:latest
-```
-
-4. Push images to ECR
-```bash
-docker push <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
-
-docker push <AWS_ACCOUNT_ID>.dkr.ecr.ca-central-1.amazonaws.com/financial-sentiment-api:latest
-```
-
-5. Deploy with ECS
-```ECR images wull be used by ECS
-```
+`Thanks for Reading`
